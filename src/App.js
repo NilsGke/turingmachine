@@ -1,6 +1,6 @@
 import autoAnimate from "@formkit/auto-animate";
 import { useEffect, useRef, useState } from "react";
-import "./App.css";
+import "./App.scss";
 import Cell from "./components/Cell";
 import State from "./components/State";
 import Step from "./components/Step";
