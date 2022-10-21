@@ -3,7 +3,7 @@ const Cell = ({ active, content, change }) => {
         <div className={"cell" + (active ? " active" : "")}>
             <input
                 type="text"
-                defaultValue={content}
+                value={content}
                 onChange={(e) => change(e.target.value)}
                 maxLength={1}
             />
