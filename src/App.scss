@@ -32,9 +32,9 @@
             height: $size;
             border-radius: 10px;
 
-            &:has(> .delete) {
-                // styles for if edit mode is active
-            }
+            // &:has(> .delete) {
+            //     // styles for if edit mode is active
+            // }
 
             input,
             button {
@@ -268,4 +268,38 @@
 
 #statesContainer {
     grid-area: 3 / 1 / 4 / 2;
+    #states {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+        #list {
+            display: flex;
+            flex-direction: column;
+            $gap: 5px;
+            gap: $gap;
+            padding: 20px;
+            .state {
+                background: #252525;
+                padding: 20px;
+                border-radius: 20px;
+                gap: $gap;
+                display: flex;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                
+                input, textarea {
+                    border-radius: 10px;
+                    border: none;
+                    background: #3b3b3b;
+                }
+                input {
+                    font-size: 20px;
+                    width: 50px;
+                    padding-left: 10px;
+                }
+            }
+        }
+        
+    }
 }
