@@ -7,13 +7,14 @@
 //         direction: 1,
 //     },
 // },
+import { BsArrowRight } from "react-icons/bs";
 
-const Step = ({ data, change, states }) => {
+const Step = ({ data, change, states, current }) => {
     console.log(data.state, states);
     const StateSelect = ({ change: changeFun, name, selected }) => (
         <select
             name={name || "select"}
-            value={selected}
+            defaultValue={selected}
             onChange={(e) => changeFun(e.target.value)}
         >
             {states.map((state) => (
@@ -23,7 +24,7 @@ const Step = ({ data, change, states }) => {
     );
 
     return (
-        <div className="step">
+        <div className={"step" + (current ? " current" : "")}>
             <div className="current">
                 <StateSelect
                     name="currentStateSelector"
@@ -39,11 +40,13 @@ const Step = ({ data, change, states }) => {
                     type="text"
                     name="condition"
                     placeholder="condition"
+                    value={data.condition}
                     onChange={(e) =>
                         change({ ...data, condition: e.target.value })
                     }
                 />
             </div>
+            <BsArrowRight />
             <div className="new">
                 <StateSelect
                     name="newStateSelector"
@@ -58,6 +61,7 @@ const Step = ({ data, change, states }) => {
                 <input
                     type="text"
                     placeholder="new letter"
+                    defaultValue={data.new.letter}
                     onChange={(e) =>
                         change({
                             ...data,
@@ -81,6 +85,13 @@ const Step = ({ data, change, states }) => {
                     <option value="H">H</option>
                 </select>
             </div>
+            <textarea
+                name=""
+                id=""
+                cols="20"
+                rows="1"
+                defaultValue={data.note}
+            ></textarea>
         </div>
     );
 };
