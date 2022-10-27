@@ -107,6 +107,7 @@ function App() {
     // step
     useEffect(() => {
         if (!doOneStep) return;
+        setDoOneStep(false);
         const letter = strip.at(pointerPos).letter;
         const state = states.find((s) => s.id === currentState);
 
@@ -139,7 +140,6 @@ function App() {
 
         const newStrip = strip.slice();
         newStrip[pointerPos].letter = instruction.new.letter;
-        console.log(newStrip);
         setStrip(newStrip);
         setCurrentState(instruction.new.state);
         switch (instruction.new.direction) {
@@ -149,27 +149,33 @@ function App() {
                     const newStrip = strip.slice();
                     let id = 0;
                     while (newStrip.map((s) => s.id).includes(id)) id++;
-                    newStrip.unshift({ id, letter: "" });
+                    newStrip.unshift({ id, letter: "_" });
                     setStrip(newStrip);
                 } else {
                     setPointerPos(pointerPos - 1);
                 }
                 break;
             case "R":
+                // if pointer is at very right, add new cell
+                if (pointerPos === strip.length - 1) {
+                    const newStrip = strip.slice();
+                    let id = 0;
+                    while (newStrip.map((s) => s.id).includes(id)) id++;
+                    newStrip.push({ id, letter: "_" });
+                    setStrip(newStrip);
+                }
                 setPointerPos(pointerPos + 1);
                 break;
             case "H":
                 setHalt(true);
         }
-
-        setDoOneStep(false);
     }, [doOneStep]);
 
     useEffect(() => {
         clearInterval(clock);
         if (halt || !running || doOneStep) {
             setRunning(false);
-            console.warn("something went wrong");
+            console.warn("something went wrong", { halt, running, doOneStep });
             return;
         }
         const newInterval = setInterval(() => {
@@ -178,13 +184,16 @@ function App() {
             }
 
             step();
-        }, 500);
+        }, 100);
         setClock(newInterval);
         return () => clearInterval(clock);
     }, [running]);
 
     useEffect(() => {
-        if (halt) setRunning(false);
+        if (halt) {
+            setRunning(false);
+            toast.success("program finished");
+        }
         setHalt(false);
     }, [halt]);
 
