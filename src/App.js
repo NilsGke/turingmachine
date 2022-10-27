@@ -11,6 +11,7 @@ import { GrEdit, GrCheckmark, GrPowerReset } from "react-icons/gr";
 import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
 import { VscDebugStepOver } from "react-icons/vsc";
 import { BiImport, BiExport } from "react-icons/bi";
+import { AiOutlineSave } from "react-icons/ai";
 
 function App() {
     const [strip, setStrip] = useState([
@@ -289,6 +290,10 @@ function App() {
                     <button>
                         <BiExport />
                     </button>
+                    <button onClick={()=>{
+                        const name = prompt("enter name: ");
+                        
+                    }}><AiOutlineSave/></button>
                 </div>
             </div>
 
