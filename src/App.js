@@ -17,16 +17,16 @@ import { AiOutlineSave } from "react-icons/ai";
 
 function App() {
     const [strip, setStrip] = useState([
-        { id: 0, letter: "1" },
-        { id: 1, letter: "1" },
-        { id: 2, letter: "1" },
-        { id: 3, letter: "1" },
-        { id: 4, letter: "1" },
-        { id: 5, letter: "1" },
-        { id: 6, letter: "1" },
-        { id: 7, letter: "1" },
-        { id: 8, letter: "1" },
-        { id: 9, letter: "0" },
+        { id: 0, letter: "A" },
+        { id: 1, letter: "B" },
+        { id: 2, letter: "B" },
+        { id: 3, letter: "A" },
+        { id: 4, letter: "B" },
+        { id: 5, letter: "A" },
+        { id: 6, letter: "A" },
+        { id: 7, letter: "B" },
+        { id: 8, letter: "A" },
+        { id: 9, letter: "B" },
     ]);
     const [states, setStates] = useState([
         { id: 0, letter: "a", note: "" },
@@ -174,17 +174,15 @@ function App() {
     useEffect(() => {
         clearInterval(clock);
         if (halt || !running || doOneStep) {
-            setRunning(false);
             console.warn("something went wrong", { halt, running, doOneStep });
             return;
         }
         const newInterval = setInterval(() => {
             if (halt || !running || doOneStep) {
-                setRunning(false);
+            } else {
+                step();
             }
-
-            step();
-        }, 100);
+        }, 10);
         setClock(newInterval);
         return () => clearInterval(clock);
     }, [running]);
