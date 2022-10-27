@@ -392,6 +392,32 @@ function App() {
                                 }}
                             />
                         ))}
+                        <div className="step add">
+                            <button
+                                onClick={() => {
+                                    const newProgram = program.slice();
+                                    let id = 0;
+                                    while (
+                                        newProgram.map((i) => i.id).includes(id)
+                                    )
+                                        id++;
+                                    newProgram.push({
+                                        id,
+                                        state: 0,
+                                        condition: "_",
+                                        new: {
+                                            state: 0,
+                                            letter: "_",
+                                            direction: "R",
+                                        },
+                                        note: "",
+                                    });
+                                    setProgram(newProgram);
+                                }}
+                            >
+                                +
+                            </button>
+                        </div>
                     </div>
                 </div>
 

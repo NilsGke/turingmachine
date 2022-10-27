@@ -252,6 +252,20 @@
                     }
                 }
             }
+            &.add {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                text-align: center;
+                background-color: transparent;
+                button {
+                    font-size: 30px;
+                    color: #63ff6b;
+                    background-color: transparent;
+                    border: none;
+                    cursor: pointer;
+                }
+            }
         }
     }
 }
