@@ -213,16 +213,44 @@
                 font-family: "Segoe UI", Arial, Helvetica, sans-serif;
                 font-size: 14px;
                 resize: none;
-                min-width: 200px;
+                min-width: 50px;
+                max-width: 50px;
                 overflow: show;
                 border-radius: 10px;
-                background-color: transparent;
+                background-color: #3b3b3b;
                 text-align: center;
                 &::-webkit-scrollbar {
                     display: none;
                 }
                 -ms-overflow-style: none;
                 scrollbar-width: none;
+                transition: min-width 0.5s ease-in-out;
+                &.big,
+                &:focus {
+                    min-width: 200px;
+                }
+            }
+            div.buttons {
+                margin-left: 10px;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: column;
+                flex-wrap: nowrap;
+                button {
+                    background-color: transparent;
+                    border: none;
+                    width: 30px;
+                    height: 30px;
+                    cursor: pointer;
+                    &.delete svg {
+                        height: 100%;
+                        width: 100%;
+                        path {
+                            color: #ff5151;
+                        }
+                    }
+                }
             }
         }
     }

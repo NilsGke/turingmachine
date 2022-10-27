@@ -8,8 +8,17 @@
 //     },
 // },
 import { BsArrowRight } from "react-icons/bs";
+import { AiFillDelete, AiOutlineUp, AiOutlineDown } from "react-icons/ai";
 
-const Step = ({ data, change, states, current }) => {
+const Step = ({
+    data,
+    change,
+    states,
+    current,
+    delete: deleteFun,
+    move,
+    canMove,
+}) => {
     console.log(data.state, states);
     const StateSelect = ({ change: changeFun, name, selected }) => (
         <select
@@ -92,6 +101,25 @@ const Step = ({ data, change, states, current }) => {
                 rows="1"
                 defaultValue={data.note}
             ></textarea>
+            <div className="buttons">
+                {canMove.up ? (
+                    <button className="move top" onClick={() => move(-1)}>
+                        <AiOutlineUp />
+                    </button>
+                ) : (
+                    ""
+                )}
+                <button className="delete" onClick={deleteFun}>
+                    <AiFillDelete />
+                </button>
+                {canMove.down ? (
+                    <button className="move down" onClick={() => move(1)}>
+                        <AiOutlineDown />
+                    </button>
+                ) : (
+                    ""
+                )}
+            </div>
         </div>
     );
 };

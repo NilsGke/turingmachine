@@ -284,6 +284,11 @@ function App() {
                     <div id="list" ref={programRef}>
                         {program.map((step, index) => (
                             <Step
+                                canMove={{
+                                    up: index != 0,
+                                    down: index + 1 != program.length,
+                                }}
+                                key={step.id}
                                 current={pointerPos === index}
                                 data={step}
                                 states={states}
@@ -291,6 +296,20 @@ function App() {
                                     const newSteps = program.slice();
                                     newSteps[index] = newStep;
                                     setProgram(newSteps);
+                                }}
+                                move={(direction) => {
+                                    const newProgram = program.slice();
+                                    const temp = newProgram[index];
+                                    newProgram[index] =
+                                        newProgram[index + direction];
+                                    newProgram[index + direction] = temp;
+
+                                    setProgram(newProgram);
+                                }}
+                                delete={() => {
+                                    const newProgram = program.slice();
+                                    newProgram.splice(index, 1);
+                                    setProgram(newProgram);
                                 }}
                             />
                         ))}
