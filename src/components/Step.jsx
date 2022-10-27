@@ -64,7 +64,7 @@ const Step = ({
                     onChange={(e) =>
                         change({
                             ...data,
-                            new: { ...data.new, character: e.target.value },
+                            new: { ...data.new, letter: e.target.value },
                         })
                     }
                 />

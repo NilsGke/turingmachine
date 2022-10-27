@@ -17,7 +17,7 @@ import { AiOutlineSave } from "react-icons/ai";
 
 function App() {
     const [strip, setStrip] = useState([
-        { id: 0, letter: "" },
+        { id: 0, letter: "1" },
         { id: 1, letter: "1" },
         { id: 2, letter: "1" },
         { id: 3, letter: "1" },
@@ -35,28 +35,28 @@ function App() {
 
     const [program, setProgram] = useState([
         {
+            id: 0,
             state: 0,
             condition: "1",
             new: {
-                state: 1,
-                letter: "o",
+                state: 0,
+                letter: "0",
                 direction: "R",
             },
             note: "",
         },
         {
+            id: 1,
             state: 0,
             condition: "0",
             new: {
-                state: 1,
+                state: 0,
                 letter: "0",
-                direction: "H",
+                direction: "L",
             },
             note: "",
         },
     ]);
-
-    const [running, setRunning] = useState(false);
 
     // for inports and export i have to first clear the current states
     const [imported, setImported] = useState(null);
@@ -64,9 +64,12 @@ function App() {
     const [editMode, setEditMode] = useState(false);
 
     // controls
+    const [running, setRunning] = useState(false);
+    const [clock, setClock] = useState(null);
     const [doOneStep, setDoOneStep] = useState(false);
     const [pointerPos, setPointerPos] = useState(0);
     const [currentState, setCurrentState] = useState(0);
+    const [halt, setHalt] = useState(false);
 
     const stripRef = useRef(null);
     const programRef = useRef(null);
@@ -101,27 +104,89 @@ function App() {
     }, [program, states]);
 
     // control functions
+    // step
     useEffect(() => {
         if (!doOneStep) return;
         const letter = strip.at(pointerPos).letter;
+        const state = states.find((s) => s.id === currentState);
+
         const instructionsForState = program.filter(
             (s) => s.state === currentState
         );
-        if (instructionsForState.length === 0)
-            return toast.error(
-                `no instructions for state: ${
-                    states.find((s) => s.id === currentState).letter
-                }`,
-                {}
-            );
+        if (instructionsForState.length === 0) {
+            toast.error(`no instructions for state: "${state.letter}"`);
+            setDoOneStep(false);
+            setHalt(true);
+            return;
+        }
+
         const instructionsFitCondition = instructionsForState.filter(
             (s) => s.condition === letter
         );
-        if (instructionsFitCondition.length === 0)
-            toast(`no Step found with condition: ${letter}`, {});
+        if (instructionsFitCondition.length === 0) {
+            toast.error(`no Step found with condition: "${letter}"`, {});
+            setDoOneStep(false);
+            setHalt(true);
+            return;
+        }
+
+        if (instructionsFitCondition.length > 1)
+            toast.warn(
+                `found multiple instructions that could fulfill this case (condition: ${letter}, state: ${state.letter})`
+            );
+
+        const instruction = instructionsFitCondition.at(0);
+
+        const newStrip = strip.slice();
+        newStrip[pointerPos].letter = instruction.new.letter;
+        console.log(newStrip);
+        setStrip(newStrip);
+        setCurrentState(instruction.new.state);
+        switch (instruction.new.direction) {
+            case "L":
+                // if pointer is at very left, add new cell
+                if (pointerPos === 0) {
+                    const newStrip = strip.slice();
+                    let id = 0;
+                    while (newStrip.map((s) => s.id).includes(id)) id++;
+                    newStrip.unshift({ id, letter: "" });
+                    setStrip(newStrip);
+                } else {
+                    setPointerPos(pointerPos - 1);
+                }
+                break;
+            case "R":
+                setPointerPos(pointerPos + 1);
+                break;
+            case "H":
+                setHalt(true);
+        }
 
         setDoOneStep(false);
     }, [doOneStep]);
+
+    useEffect(() => {
+        clearInterval(clock);
+        if (halt || !running || doOneStep) {
+            setRunning(false);
+            console.warn("something went wrong");
+            return;
+        }
+        const newInterval = setInterval(() => {
+            if (halt || !running || doOneStep) {
+                setRunning(false);
+            }
+
+            step();
+        }, 500);
+        setClock(newInterval);
+        return () => clearInterval(clock);
+    }, [running]);
+
+    useEffect(() => {
+        if (halt) setRunning(false);
+        setHalt(false);
+    }, [halt]);
 
     const step = () => {
         if (!doOneStep) setDoOneStep(true);
@@ -154,7 +219,7 @@ function App() {
 
         const newProgram = [];
         const newStates = [];
-        instructions.forEach((ins) => {
+        instructions.forEach((ins, index) => {
             if (!newStates.map((s) => s.letter).includes(ins.stateName))
                 newStates.push({
                     id: newStates.length,
@@ -168,9 +233,9 @@ function App() {
                     letter: ins.new.stateName,
                     note: "",
                 });
-            console.log(newProgram);
             newProgram.push({
                 ...ins,
+                id: index,
                 state: newStates.find((s) => s.letter === ins.stateName).id,
                 new: {
                     ...ins.new,
@@ -180,7 +245,6 @@ function App() {
             });
         });
 
-        console.log(newProgram, newStates);
         setImported({ states: newStates, program: newProgram });
     };
 
@@ -229,7 +293,6 @@ function App() {
                                     newStrip[index] =
                                         newStrip[index + direction];
                                     newStrip[index + direction] = temp;
-
                                     setStrip(newStrip);
                                 }}
                                 key={cell.id}
@@ -354,7 +417,7 @@ function App() {
                 <div id="statesContainer">
                     <div id="states">
                         <h2>States</h2>
-                        <div id="list" ref={programRef}>
+                        <div id="list" ref={stateRef}>
                             {states.map((state, index) => (
                                 <State
                                     key={state.id}
