@@ -1,8 +1,8 @@
 import { AiFillDelete } from "react-icons/ai";
 
-const State = ({ data, change, delete: deleteFun }) => {
+const State = ({ data, change, delete: deleteFun, current }) => {
     return (
-        <div className="state">
+        <div className={"state" + (current ? " current" : "")}>
             <input
                 type="text"
                 // maxLength={1}

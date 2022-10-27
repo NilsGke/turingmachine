@@ -374,6 +374,7 @@ function App() {
                                         );
                                         setStates(newStates);
                                     }}
+                                    current={state.id === currentState}
                                 />
                             ))}
                         </div>
