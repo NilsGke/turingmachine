@@ -1,12 +1,3 @@
-// {
-//     state: 0,
-//     condition: "s",
-//     new: {
-//         state: 1,
-//         character: "o",
-//         direction: 1,
-//     },
-// },
 import { BsArrowRight } from "react-icons/bs";
 import { AiFillDelete, AiOutlineUp, AiOutlineDown } from "react-icons/ai";
 
@@ -24,7 +15,7 @@ const Step = ({
         <select
             name={name || "select"}
             defaultValue={selected}
-            onChange={(e) => changeFun(e.target.value)}
+            onChange={(e) => changeFun(parseInt(e.target.value))}
         >
             {states.map((state) => (
                 <option value={state.id}>{state.letter}</option>
@@ -100,6 +91,13 @@ const Step = ({
                 cols="20"
                 rows="1"
                 defaultValue={data.note}
+                className={data.note.length >= 1 ? "big" : "small"}
+                onChange={(e) =>
+                    change({
+                        ...data,
+                        note: e.target.value,
+                    })
+                }
             ></textarea>
             <div className="buttons">
                 {canMove.up ? (
