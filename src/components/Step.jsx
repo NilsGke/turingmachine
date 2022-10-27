@@ -10,7 +10,6 @@ const Step = ({
     move,
     canMove,
 }) => {
-    console.log(data.state, states);
     const StateSelect = ({ change: changeFun, name, selected }) => (
         <select
             name={name || "select"}
