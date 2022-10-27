@@ -1,4 +1,6 @@
-const State = ({ data, change }) => {
+import { AiFillDelete } from "react-icons/ai";
+
+const State = ({ data, change, delete: deleteFun }) => {
     return (
         <div className="state">
             <input
@@ -15,6 +17,9 @@ const State = ({ data, change }) => {
                 placeholder="note..."
                 onChange={(e) => change({ ...data, note: e.target.value })}
             ></textarea>
+            <button className="delete" onClick={deleteFun}>
+                <AiFillDelete />
+            </button>
         </div>
     );
 };

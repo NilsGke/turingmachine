@@ -290,10 +290,13 @@ function App() {
                     <button>
                         <BiExport />
                     </button>
-                    <button onClick={()=>{
-                        const name = prompt("enter name: ");
-                        
-                    }}><AiOutlineSave/></button>
+                    <button
+                        onClick={() => {
+                            const name = prompt("enter name: ");
+                        }}
+                    >
+                        <AiOutlineSave />
+                    </button>
                 </div>
             </div>
 
@@ -303,10 +306,21 @@ function App() {
                     <div id="list" ref={programRef}>
                         {states.map((state, index) => (
                             <State
+                                key={state.id}
                                 data={state}
                                 change={(newState) => {
                                     const newStates = states.slice();
                                     newStates[index] = newState;
+                                    setStates(newStates);
+                                }}
+                                delete={() => {
+                                    const newStates = states.slice();
+                                    newStates.splice(
+                                        states.findIndex(
+                                            (s) => s.id === state.id
+                                        ),
+                                        1
+                                    );
                                     setStates(newStates);
                                 }}
                             />
@@ -333,7 +347,7 @@ function App() {
                             setStates(newStates);
                         }}
                     >
-                        Add State
+                        +
                     </button>
                 </div>
             </div>
