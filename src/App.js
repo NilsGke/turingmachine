@@ -101,10 +101,13 @@ function App() {
             setProgram(imported.program);
             setImported(null);
         }
-    }, [program, states]);
+    }, [program, states, imported]);
 
     // control functions
     // step
+    const step = () => {
+        if (!doOneStep) setDoOneStep(true);
+    };
     useEffect(() => {
         if (!doOneStep) return;
         setDoOneStep(false);
@@ -152,7 +155,7 @@ function App() {
                     newStrip.unshift({ id, letter: "_" });
                     setStrip(newStrip);
                 } else {
-                    setPointerPos(pointerPos - 1);
+                    setPointerPos((prevPointerPos) => prevPointerPos - 1);
                 }
                 break;
             case "R":
@@ -164,17 +167,25 @@ function App() {
                     newStrip.push({ id, letter: "_" });
                     setStrip(newStrip);
                 }
-                setPointerPos(pointerPos + 1);
+                setPointerPos((prevPointerPos) => prevPointerPos + 1);
                 break;
             case "H":
                 setHalt(true);
+                break;
+            default:
+                break;
         }
+        // disable missing dependencies because it slowed down the program
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [doOneStep]);
 
     useEffect(() => {
         clearInterval(clock);
         if (halt || !running || doOneStep) {
-            console.warn("something went wrong", { halt, running, doOneStep });
+            console.warn(
+                "something went wrong (or not, because the dependencies)",
+                { halt, running, doOneStep }
+            );
             return;
         }
         const newInterval = setInterval(() => {
@@ -185,6 +196,8 @@ function App() {
         }, 10);
         setClock(newInterval);
         return () => clearInterval(clock);
+        // disable errors due to missing dependencies, because those dependencies slowed down the program so much
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [running]);
 
     useEffect(() => {
@@ -194,10 +207,6 @@ function App() {
         }
         setHalt(false);
     }, [halt]);
-
-    const step = () => {
-        if (!doOneStep) setDoOneStep(true);
-    };
 
     const importProgram = () => {
         const programAsText = prompt("paste Program here");
@@ -355,8 +364,8 @@ function App() {
                         {program.map((step, index) => (
                             <Step
                                 canMove={{
-                                    up: index != 0,
-                                    down: index + 1 != program.length,
+                                    up: index !== 0,
+                                    down: index + 1 !== program.length,
                                 }}
                                 key={step.id}
                                 current={pointerPos === index}
@@ -414,6 +423,7 @@ function App() {
                         <button
                             onClick={() => {
                                 const name = prompt("enter name: ");
+                                console.log(name);
                             }}
                         >
                             <AiOutlineSave />

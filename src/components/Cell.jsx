@@ -1,4 +1,3 @@
-import { useEffect, useState } from "react";
 import { AiFillDelete, AiOutlineLeft, AiOutlineRight } from "react-icons/ai";
 
 const Cell = ({
