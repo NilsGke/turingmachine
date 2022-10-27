@@ -10,12 +10,6 @@ const Cell = ({
     canMove,
     move,
 }) => {
-    const [letter, setLetter] = useState(data.letter);
-
-    useEffect(() => {
-        if (letter !== data.letter) change({ ...data, letter });
-    }, [letter]);
-
     return (
         <div className={"cell" + (active ? " active" : "")}>
             {editMode ? (
@@ -41,8 +35,8 @@ const Cell = ({
             <input
                 id={"stripInput" + data.id}
                 type="text"
-                value={letter}
-                onChange={(e) => setLetter(e.target.value)}
+                value={data.letter}
+                onChange={(e) => change({ ...data, letter: e.target.value })}
                 maxLength={1}
             />
             {editMode ? (
