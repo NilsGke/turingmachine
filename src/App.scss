@@ -2,7 +2,7 @@
     text-align: center;
 
     display: grid;
-    grid-template-columns: repeat(2, auto);
+    grid-template-columns: repeat(2, 1fr);
     grid-template-rows: auto 200px auto;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
@@ -272,7 +272,6 @@
 
 #statesContainer {
     grid-area: 3 / 1 / 4 / 2;
-    max-width: 50%;
     #states {
         display: flex;
         justify-content: center;
@@ -301,6 +300,7 @@
                 display: flex;
                 flex-direction: row;
                 flex-wrap: nowrap;
+                justify-content: space-around;
 
                 input,
                 textarea {
@@ -308,12 +308,43 @@
                     border: none;
                     background: #3b3b3b;
                 }
+
+                // THINK IF YOU NEED THE NOTE THINGY
+                textarea {
+                    display: none;
+                }
+
                 input {
                     font-size: 20px;
                     width: 50px;
-                    padding-left: 10px;
+                    // padding-left: 10px;
+                    text-align: center;
+                }
+                button.delete {
+                    max-width: 25px;
+                    padding: 0;
+                    svg {
+                        height: 100%;
+                        width: 100%;
+                        path {
+                            transition: all 0.2s ease-out;
+                            color: #8a8a8a;
+                        }
+                    }
+                    &:hover {
+                        svg path {
+                            color: #ff5151;
+                        }
+                    }
                 }
             }
         }
+    }
+    button {
+        background: transparent;
+        border: none;
+        color: #63ff6b;
+        font-size: 30px;
+        cursor: pointer;
     }
 }
