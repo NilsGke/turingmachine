@@ -236,10 +236,6 @@ function App() {
 
         const keyframes = [
             {
-                top: headTop,
-                left: headLeft,
-            },
-            {
                 top: top + height + topMargin + "px",
                 left: left + width / 2 - headWidth / 2 + "px",
             },
