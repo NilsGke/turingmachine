@@ -165,6 +165,53 @@
             }
         }
     }
+    $size: 15px;
+    #head {
+        display: block;
+        position: absolute;
+        width: 0;
+        height: 0;
+        // code for triangle
+        // border-left: $size solid transparent;
+        // border-right: $size solid transparent;
+        // border-bottom: $size solid #63ff6b;
+        top: 0;
+        left: 0;
+        z-index: 20;
+        transition: all 0.4s ease-in-out;
+    }
+
+    // rounded triangle from: https://stackoverflow.com/questions/14446677/how-to-make-3-corner-rounded-triangle-in-css#:~:text=127-,My%20best%20attempt
+    #head {
+        position: absolute;
+        background-color: orange;
+        text-align: left;
+    }
+    #head:before,
+    #head:after {
+        content: "";
+        position: absolute;
+        background-color: inherit;
+    }
+    #head,
+    #head:before,
+    #head:after {
+        width: $size;
+        height: $size;
+        border-top-right-radius: 30%;
+    }
+
+    #head {
+        transform: rotate(-60deg) skewX(-30deg) scale(1, 0.866);
+    }
+    #head:before {
+        transform: rotate(-135deg) skewX(-45deg) scale(1.414, 0.707)
+            translate(0, -50%);
+    }
+    #head:after {
+        transform: rotate(135deg) skewY(-45deg) scale(0.707, 1.414)
+            translate(50%);
+    }
 }
 
 #program {
