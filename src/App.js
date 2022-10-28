@@ -1,5 +1,5 @@
 import autoAnimate from "@formkit/auto-animate";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./App.scss";
@@ -10,10 +10,15 @@ import getFreeId from "./helpers/getFreeId";
 
 // icons
 import { GrEdit, GrCheckmark, GrPowerReset } from "react-icons/gr";
-import { BsFillPlayFill, BsPauseFill } from "react-icons/bs";
+import {
+    BsFillPlayFill,
+    BsPauseFill,
+    BsFillSkipForwardFill,
+} from "react-icons/bs";
 import { VscDebugStepOver } from "react-icons/vsc";
 import { BiImport, BiExport } from "react-icons/bi";
 import { AiOutlineSave } from "react-icons/ai";
+import { instantCalculator, stepFun } from "./helpers/step";
 
 function App() {
     const intervalTime = 200; // ms
@@ -109,78 +114,28 @@ function App() {
 
     // control functions
     // step
+    console.log("rerender");
     const step = () => {
-        if (!doOneStep) setDoOneStep(true);
+        setDoOneStep(true);
     };
     useEffect(() => {
         if (!doOneStep) return;
         setDoOneStep(false);
-        const letter = strip.at(pointerPos).letter;
-        const state = states.find((s) => s.id === currentState);
-
-        const instructionsForState = program.filter(
-            (s) => s.state === currentState
+        const res = stepFun(
+            strip,
+            program,
+            currentState,
+            states,
+            pointerPos,
+            toast
         );
-        if (instructionsForState.length === 0) {
-            toast.error(`no instructions for state: "${state.letter}"`);
-            setDoOneStep(false);
-            setHalt(true);
-            return;
-        }
+        console.log(res);
+        if (res.error !== undefined) setRunning(false);
+        if (res.halt) setHalt(true);
 
-        const instructionsFitCondition = instructionsForState.filter(
-            (s) => s.condition === letter
-        );
-        if (instructionsFitCondition.length === 0) {
-            toast.error(`no Step found with condition: "${letter}"`, {});
-            setDoOneStep(false);
-            setHalt(true);
-            return;
-        }
-
-        if (instructionsFitCondition.length > 1)
-            toast.warn(
-                `found multiple instructions that could fulfill this case (condition: ${letter}, state: ${state.letter})`
-            );
-
-        const instruction = instructionsFitCondition.at(0);
-
-        const newStrip = strip.slice();
-        newStrip[pointerPos].letter = instruction.new.letter;
-        setStrip(newStrip);
-        setCurrentState(instruction.new.state);
-        switch (instruction.new.direction) {
-            case "L":
-                // if pointer is at very left, add new cell
-                if (pointerPos === 0) {
-                    const newStrip = strip.slice();
-                    let id = 0;
-                    const ids = newStrip.map((s) => s.id);
-                    while (ids.includes(id)) id++;
-                    newStrip.unshift({ id, letter: "_" });
-                    setStrip(newStrip);
-                } else {
-                    setPointerPos((prevPointerPos) => prevPointerPos - 1);
-                }
-                break;
-            case "R":
-                // if pointer is at very right, add new cell
-                if (pointerPos === strip.length - 1) {
-                    const newStrip = strip.slice();
-                    let id = 0;
-                    const ids = newStrip.map((s) => s.id);
-                    while (ids.includes(id)) id++;
-                    newStrip.push({ id, letter: "_" });
-                    setStrip(newStrip);
-                }
-                setPointerPos((prevPointerPos) => prevPointerPos + 1);
-                break;
-            case "H":
-                setHalt(true);
-                break;
-            default:
-                break;
-        }
+        setStrip(res.strip);
+        setCurrentState(res.currentState);
+        setPointerPos(res.pointerPos);
         // disable missing dependencies because it slowed down the program
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [doOneStep]);
@@ -214,7 +169,7 @@ function App() {
         setHalt(false);
     }, [halt]);
 
-    useEffect(() => {
+    useLayoutEffect(() => {
         if (stripRef.current === null || headRef.current === null) return;
 
         const head = headRef.current;
@@ -472,6 +427,26 @@ function App() {
                             onClick={step}
                         >
                             <VscDebugStepOver />
+                        </button>
+                        <button
+                            onClick={() => {
+                                const final = instantCalculator(
+                                    strip,
+                                    program,
+                                    currentState,
+                                    states,
+                                    pointerPos,
+                                    toast
+                                );
+
+                                if (final.error) return;
+                                console.log(final);
+                                setStrip(final.strip);
+                                setCurrentState(final.currentState);
+                                setPointerPos(final.pointerPos);
+                            }}
+                        >
+                            <BsFillSkipForwardFill />
                         </button>
                         <button>
                             <GrPowerReset />
