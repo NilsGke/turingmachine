@@ -16,6 +16,8 @@ import { BiImport, BiExport } from "react-icons/bi";
 import { AiOutlineSave } from "react-icons/ai";
 
 function App() {
+    const intervalTime = 200; // ms
+
     const [strip, setStrip] = useState([
         { id: 0, letter: "A" },
         { id: 1, letter: "B" },
@@ -74,6 +76,8 @@ function App() {
     const stripRef = useRef(null);
     const programRef = useRef(null);
     const stateRef = useRef(null);
+
+    const headRef = useRef(null);
 
     useEffect(() => {
         stripRef.current && autoAnimate(stripRef.current);
@@ -193,7 +197,7 @@ function App() {
             } else {
                 step();
             }
-        }, 10);
+        }, intervalTime);
         setClock(newInterval);
         return () => clearInterval(clock);
         // disable errors due to missing dependencies, because those dependencies slowed down the program so much
@@ -207,6 +211,47 @@ function App() {
         }
         setHalt(false);
     }, [halt]);
+
+    useEffect(() => {
+        if (stripRef.current === null || headRef.current === null) return;
+
+        const head = headRef.current;
+
+        const currentElement = [...stripRef.current.children]
+            .filter((e) => !e.classList.contains("button"))
+            .at(pointerPos);
+
+        const { left, top, width, height } =
+            currentElement.getBoundingClientRect();
+
+        const topMargin = 15 + (editMode ? 30 : 0);
+
+        const {
+            top: headTop,
+            left: headLeft,
+            width: headWidth,
+        } = head.getBoundingClientRect();
+
+        const keyframes = [
+            {
+                top: headTop,
+                left: headLeft,
+            },
+            {
+                top: top + height + topMargin + "px",
+                left: left + width / 2 - headWidth / 2 + "px",
+            },
+        ];
+
+        console.log(keyframes);
+
+        head.animate(keyframes, {
+            duration: intervalTime,
+            easing: "ease-out",
+            fillMode: "forwards",
+            fill: "forwards",
+        });
+    }, [stripRef, headRef, strip, pointerPos, currentState, editMode]);
 
     const importProgram = () => {
         const programAsText = prompt("paste Program here");
@@ -356,6 +401,7 @@ function App() {
                             </button>
                         </div>
                     </div>
+                    <div id="head" ref={headRef}></div>
                 </div>
 
                 <div id="program">
