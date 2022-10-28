@@ -37,10 +37,10 @@ function App() {
         {
             id: 0,
             state: 0,
-            condition: "1",
+            condition: "A",
             new: {
                 state: 0,
-                letter: "0",
+                letter: "B",
                 direction: "R",
             },
             note: "",
@@ -48,11 +48,11 @@ function App() {
         {
             id: 1,
             state: 0,
-            condition: "0",
+            condition: "B",
             new: {
                 state: 0,
-                letter: "0",
-                direction: "L",
+                letter: "A",
+                direction: "R",
             },
             note: "",
         },
