@@ -155,7 +155,8 @@ function App() {
                 if (pointerPos === 0) {
                     const newStrip = strip.slice();
                     let id = 0;
-                    while (newStrip.map((s) => s.id).includes(id)) id++;
+                    const ids = newStrip.map((s) => s.id);
+                    while (ids.includes(id)) id++;
                     newStrip.unshift({ id, letter: "_" });
                     setStrip(newStrip);
                 } else {
@@ -167,7 +168,8 @@ function App() {
                 if (pointerPos === strip.length - 1) {
                     const newStrip = strip.slice();
                     let id = 0;
-                    while (newStrip.map((s) => s.id).includes(id)) id++;
+                    const ids = newStrip.map((s) => s.id);
+                    while (ids.includes(id)) id++;
                     newStrip.push({ id, letter: "_" });
                     setStrip(newStrip);
                 }
