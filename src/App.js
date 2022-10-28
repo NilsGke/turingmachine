@@ -245,8 +245,6 @@ function App() {
             },
         ];
 
-        console.log(keyframes);
-
         head.animate(keyframes, {
             duration: intervalTime,
             easing: "ease-out",
