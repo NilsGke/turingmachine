@@ -228,11 +228,7 @@ function App() {
 
         const topMargin = 15 + (editMode ? 30 : 0);
 
-        const {
-            top: headTop,
-            left: headLeft,
-            width: headWidth,
-        } = head.getBoundingClientRect();
+        const { width: headWidth } = head.getBoundingClientRect();
 
         const keyframes = [
             {
