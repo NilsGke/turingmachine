@@ -130,8 +130,14 @@ function App() {
             toast
         );
         console.log(res);
-        if (res.error !== undefined) setRunning(false);
-        if (res.halt) setHalt(true);
+        if (res.error !== undefined) {
+            setRunning(false);
+            return;
+        }
+        if (res.halt) {
+            setHalt(true);
+            return;
+        }
 
         setStrip(res.strip);
         setCurrentState(res.currentState);
