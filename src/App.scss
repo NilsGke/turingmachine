@@ -3,7 +3,7 @@
 
     display: grid;
     grid-template-columns: repeat(2, 1fr);
-    grid-template-rows: auto 200px auto;
+    grid-template-rows: auto 350px auto;
     grid-column-gap: 0px;
     grid-row-gap: 0px;
     padding: 5%;
@@ -325,14 +325,38 @@
     flex-direction: column;
     $gap: 10px;
     gap: $gap;
-    div {
+    > div {
         background: #252525;
-        padding: 20px;
+        $padding: 20px;
+        padding: $padding;
         border-radius: 20px;
         display: flex;
         align-items: center;
         justify-content: center;
+        width: calc(246px - 2 * $padding);
         gap: $gap;
+        div.importExport,
+        div.saveLoad {
+            width: 50%;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            flex-direction: column;
+            flex-wrap: nowrap;
+            > h3 {
+                font-size: 13px;
+                margin-top: 0;
+                color: #aaa;
+            }
+            > div.buttons {
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                flex-direction: row;
+                flex-wrap: nowrap;
+                gap: $gap;
+            }
+        }
     }
 
     button {
@@ -439,5 +463,52 @@
         color: #63ff6b;
         font-size: 30px;
         cursor: pointer;
+    }
+}
+
+#loadProgramModal.container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 100%;
+    width: 100%;
+    z-index: 20;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    // opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+    backdrop-filter: blur(4px) brightness(40%);
+    > div.modal {
+        position: relative;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        flex-direction: column;
+        flex-wrap: nowrap;
+        padding: 20px;
+        background-color: #252525;
+        border-radius: 20px;
+
+        button.close {
+            background-color: #3b3b3b;
+            position: absolute;
+            top: 20px;
+            right: 20px;
+            height: 35px;
+            width: 35px;
+            border-radius: 200px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: none;
+            cursor: pointer;
+            font-size: 15px;
+        }
+        h2 {
+            margin-right: 50px;
+            margin-top: 0;
+            text-align: center;
+        }
     }
 }
