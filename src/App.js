@@ -17,8 +17,9 @@ import {
 } from "react-icons/bs";
 import { VscDebugStepOver } from "react-icons/vsc";
 import { BiImport, BiExport } from "react-icons/bi";
-import { AiOutlineSave } from "react-icons/ai";
+import { AiOutlineCloudUpload, AiOutlineCloudDownload } from "react-icons/ai";
 import { instantCalculator, stepFun } from "./helpers/step";
+import LoadProgramModal from "./components/LoadProgramModal";
 
 function App() {
     const intervalTime = 200; // ms
@@ -64,6 +65,8 @@ function App() {
             note: "",
         },
     ]);
+
+    const [loadProgramModal, setLoadProgramModal] = useState(false);
 
     // for inports and export i have to first clear the current states
     const [imported, setImported] = useState(null);
@@ -260,6 +263,10 @@ function App() {
         });
 
         setImported({ states: newStates, program: newProgram });
+    };
+
+    const exportProgram = () => {
+        // TODO: wirte export function that exports the program (and strip?) like the import function takes it (see example program)
     };
 
     return (
@@ -459,20 +466,35 @@ function App() {
                         </button>
                     </div>
                     <div>
-                        <button onClick={importProgram}>
-                            <BiImport />
-                        </button>
-                        <button>
-                            <BiExport />
-                        </button>
-                        <button
-                            onClick={() => {
-                                const name = prompt("enter name: ");
-                                console.log(name);
-                            }}
-                        >
-                            <AiOutlineSave />
-                        </button>
+                        <div className="importExport">
+                            <h3>import / export</h3>
+                            <div className="buttons">
+                                <button onClick={importProgram}>
+                                    <BiImport />
+                                </button>
+                                <button onClick={exportProgram}>
+                                    <BiExport />
+                                </button>
+                            </div>
+                        </div>
+                        <div className="saveLoad">
+                            <h3>save / load</h3>
+                            <div className="buttons">
+                                <button
+                                    onClick={() => {
+                                        const name = prompt("enter name: ");
+                                        console.log(name);
+                                    }}
+                                >
+                                    <AiOutlineCloudUpload />
+                                </button>
+                                <button
+                                    onClick={() => setLoadProgramModal(true)}
+                                >
+                                    <AiOutlineCloudDownload />
+                                </button>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -535,6 +557,11 @@ function App() {
                     </div>
                 </div>
             </div>
+            {loadProgramModal ? (
+                <LoadProgramModal close={() => setLoadProgramModal(false)} />
+            ) : (
+                ""
+            )}
             <ToastContainer
                 position="top-right"
                 autoClose={5000}
